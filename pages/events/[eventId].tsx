@@ -1,25 +1,19 @@
-import { NextPage } from "next";
+import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import EventContent from "../../components/event-detail/EventContent";
 import EventLogistics from "../../components/event-detail/EventLogistics";
 import EventSummary from "../../components/event-detail/EventSummary";
 import ErrorAlert from "../../components/ui/ErrorAlert";
-import { getEventById } from "../../dummy-data";
+import { getAllEvents, getEventById, getFeaturedEvents } from "../../helpers/api-util.helper";
 
-const EventDetailPage: NextPage = () => {
-  const router = useRouter();
+interface IProps {
+  selectedEvent: any;
+}
+const EventDetailPage: NextPage<IProps> = (props) => {
+  const event = props.selectedEvent;
 
-  const eventId = router.query.eventId as any;
-  const event = getEventById(eventId);
-
-  if(!event) return (
-    <React.Fragment>
-      <ErrorAlert>
-        <p>No event found!</p>
-      </ErrorAlert>
-    </React.Fragment>
-  );
+  if(!event) return <p className="center">Loading...</p>;
   return <React.Fragment>
     <EventSummary title={event.title} />
     <EventLogistics {...event} address={event.location} imageAlt={event.title} />
@@ -27,6 +21,28 @@ const EventDetailPage: NextPage = () => {
       <p>{event.description}</p>
     </EventContent>
   </React.Fragment>
+}
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const id = context.params?.eventId as any;
+  const event = await getEventById(id);
+
+  return {
+    props: {
+      selectedEvent: event
+    },
+    revalidate: 30
+  }
+}
+
+export const getStaticPaths: GetStaticPaths = async() => {
+  const events = await getFeaturedEvents();
+  const paths = events.map(event => ({params: {eventId: event.id}}));
+
+  return {
+    paths,
+    fallback: 'blocking',
+  };
 }
 
 export default EventDetailPage;
