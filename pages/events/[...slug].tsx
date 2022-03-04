@@ -1,4 +1,5 @@
 import { GetServerSideProps, NextPage } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 import EventList from "../../components/events/EventList";
@@ -21,8 +22,14 @@ const FilterdEventsPage: NextPage<{
   // const numYear = +filteredYear;
   // const numMonth = +filteredMonth;
 
+  const pageHeadData = <Head>
+    <title>Filtered Events</title>
+    <meta name='description' content={`All evens for ${props.date.month}/${props.date.year}`} />
+  </Head>;
+
   if(props.hasError) return (
     <React.Fragment>
+      {pageHeadData}
       <ErrorAlert>
         <p>Invalid filter. Please adjust your value.</p>
       </ErrorAlert>
@@ -46,10 +53,11 @@ const FilterdEventsPage: NextPage<{
 
   const date = new Date(props.date.year, props.date.month - 1);
 
-  return <div>
+  return <React.Fragment>
+    {pageHeadData}
     <ResultsTitle date={date} />
     <EventList items={filteredEvents} />
-  </div>
+  </React.Fragment>
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

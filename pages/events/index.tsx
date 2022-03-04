@@ -1,4 +1,5 @@
 import { GetStaticProps, NextPage } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 import EventList from "../../components/events/EventList";
@@ -15,6 +16,11 @@ const EventsPage: NextPage<{events: any[]}> = (props) => {
   }
 
   return <React.Fragment>
+    <Head>
+      <title>All Events</title>
+      <meta name='description' content='Find a lot of great events taha allow you to evolve...' />
+    </Head>
+
     <EventSearch onSearch={findEventsHandler} />
     <EventList items={events} />
   </React.Fragment>

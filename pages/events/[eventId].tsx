@@ -1,4 +1,5 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 import EventContent from "../../components/event-detail/EventContent";
@@ -15,6 +16,11 @@ const EventDetailPage: NextPage<IProps> = (props) => {
 
   if(!event) return <p className="center">Loading...</p>;
   return <React.Fragment>
+    <Head>
+      <title>{event.title}</title>
+      <meta name='description' content={event.description} />
+    </Head>
+
     <EventSummary title={event.title} />
     <EventLogistics {...event} address={event.location} imageAlt={event.title} />
     <EventContent>

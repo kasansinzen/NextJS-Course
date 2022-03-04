@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 import { IDUMMY_EVENTS } from '../../dummy-data';
 import AddressIcon from '../icons/AddressIcon';
@@ -18,7 +19,7 @@ const EventItem: React.FC<IDUMMY_EVENTS> = (props) => {
   const exploreLink = `/events/${id}`;
 
   return <li className={classes.item}>
-    <img src={`/${image}`} alt={title} />
+    <Image src={`/${image}`} alt={title} width={250} height={160} />
     <div className={classes.content}>
       <div className={classes.summary}>
         <h2>{title}</h2>
